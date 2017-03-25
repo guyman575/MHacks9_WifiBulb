@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The WIfi Bulb</title>
+</head>
+<body>
+    <H1>Welcome!</H1>
+    <p>
+        <table>{% for mac in macs%}
+      	<tr>
+            <td>{{ mac }}</td>
+            <td>
+                <form>
+                    <input type="submit" name = "remove" value = "Remove">
+                    <input type="hidden" name = "op" value="remove_mac">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}</table>
+        <form action="{{ url_for('main') }}" method="post">
+            New MAC Address:
+            <input type = 'text' name = 'address'>
+            <input type = 'hidden' name = 'op', value = 'new_mac'>
+            <input type = 'submit' name = "Submit">
+        </form>
+    </p>
+</body>
+</html>
