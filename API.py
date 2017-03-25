@@ -2,13 +2,11 @@ import os
 from time import sleep
 from speed_color import speed_color
 import threading
-
 import net_mapping
 from net_mapping import get_network_ip
 import sys
 import app
-from weather_color import check_weather
-
+# from weather_color import check_weather
 RED = '56ff000000f0aa'
 GREEN = '5600ff0000f0aa'
 BLUE = '560000ff00f0aa'
@@ -16,11 +14,10 @@ WHITE = '56fffffffff0aa'
 OFF = '5600000000f0aa'
 threads = {}
 active_macs = {'F8:32:E4:DE:27:11': 0, '64:9A:BE:D5:5F:6D': 0}
-
 saved_macs = ['F8:32:E4:DE:27:11'] #'64:9A:BE:D5:5F:6D'
-
 CONNECTED = True
 MODE = ''
+
 
 def add_mac(new_mac):
     print("API: ", new_mac)
@@ -46,44 +43,35 @@ def check_speed():
     packet = '56' + color + '00f0aa'
     change_color(packet)
 
-def check_normal():
-    if CONNECTED:
-        change_color(WHITE)
-    else:
-        print("off n")
-        change_color(OFF)
 
-
-def check_weather():
-    color = weather_color()
-    packet = '56' + color + '00f0aa'
-    change_color(packet)
-
+# def check_weather():
+#     color = weather_color()
+#     packet = '56' + color + '00f0aa'
+#     change_color(packet)
 
 def color_loop():
-    while True:
-        if CONNECTED:
-            print("getting color")
-            if MODE == 'speed':
-                check_speed()
-
-            elif MODE == 'normal':
+    try:
+        while True:
+            if CONNECTED:
+                print("getting color")
+                if MODE == 'speed':
+                    check_speed()
+                # elif MODE == 'weather':
+                #     check_weather():
+                # elif MODE == 'time':
+                #     check_time()
+                # elif MODE == 'stock':
+                #     check_stock()
+            else:
                 sleep(3)
-                check_normal()
-            # elif MODE == 'weather':
-            #     check_weather():
-            # elif MODE == 'time':
-            #     check_time()
-            # elif MODE == 'stock':
-            #     check_stock()
-        else:
-            sleep(3)
-            print("sleeping")
+                print("sleeping")
+    except:
+        print("error, broken")
 
 def loop_check():
+
     while True:
-        print(CONNECTED)
-        sleep(10)
+        sleep(1)
         print("CHECKING...")
         c = check_dict()
         if CONNECTED == True:
@@ -124,8 +112,6 @@ def main():
     if len(sys.argv) > 1:
         global MODE
         MODE = sys.argv[1]
-    if MODE == 'normal':
-        change_color(WHITE)
     t = threading.Thread(target=color_loop)
     t.start()
     threads['color'] = t
