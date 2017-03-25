@@ -1,9 +1,22 @@
 import nmap
+import socket
+import fcntl
+import struct
 
-def get_network_ip():
-    return '172.20.10.3'
 
 
+
+
+def get_network_ip(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', ifname[:15])
+    )[20:24])
+    # return '10.0.0.196'
+
+    
 def get_macs(ip_address):
     nm = nmap.PortScanner()
     hosts = ip_address + '/24'

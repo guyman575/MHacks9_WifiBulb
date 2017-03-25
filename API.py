@@ -2,11 +2,13 @@ import os
 from time import sleep
 from speed_color import speed_color
 import threading
-from net_mapping import get_macs
+
+import net_mapping
 from net_mapping import get_network_ip
 import sys
 import app
 from weather_color import check_weather
+
 RED = '56ff000000f0aa'
 GREEN = '5600ff0000f0aa'
 BLUE = '560000ff00f0aa'
@@ -14,7 +16,9 @@ WHITE = '56fffffffff0aa'
 OFF = '5600000000f0aa'
 threads = {}
 active_macs = {'F8:32:E4:DE:27:11': 0, '64:9A:BE:D5:5F:6D': 0}
-saved_macs = ['F8:32:E4:DE:27:11','64:9A:BE:D5:5F:6D']
+
+saved_macs = ['F8:32:E4:DE:27:11'] #'64:9A:BE:D5:5F:6D'
+
 CONNECTED = True
 MODE = ''
 
@@ -33,6 +37,7 @@ def change_color(color):
         if CONNECTED:
             result = os.system('sudo gatttool -b D2:39:79:10:18:87 --char-write-req --handle=0x0043 --value=' + color)
         else:
+            print("off c")
             result = os.system('sudo gatttool -b D2:39:79:10:18:87 --char-write-req --handle=0x0043 --value=' + OFF)
 
 
@@ -45,12 +50,15 @@ def check_normal():
     if CONNECTED:
         change_color(WHITE)
     else:
+        print("off n")
         change_color(OFF)
+
 
 def check_weather():
     color = weather_color()
     packet = '56' + color + '00f0aa'
     change_color(packet)
+
 
 def color_loop():
     while True:
@@ -58,23 +66,29 @@ def color_loop():
             print("getting color")
             if MODE == 'speed':
                 check_speed()
-            if MODE == 'normal':
-                check_normal()
-            if MODE == 'weather':
-                check_weather():
 
+            elif MODE == 'normal':
+                sleep(3)
+                check_normal()
+            # elif MODE == 'weather':
+            #     check_weather():
+            # elif MODE == 'time':
+            #     check_time()
+            # elif MODE == 'stock':
+            #     check_stock()
         else:
-            sleep(1)
+            sleep(3)
             print("sleeping")
 
 def loop_check():
-
     while True:
+        print(CONNECTED)
         sleep(10)
         print("CHECKING...")
         c = check_dict()
         if CONNECTED == True:
             if c == False:
+                print('off l')
                 change_color(OFF)
         global CONNECTED
         CONNECTED = c
@@ -82,9 +96,9 @@ def loop_check():
 
 
 def loop_map():
-    ip = get_network_ip()
+    ip = str(get_network_ip('wlp4s0'))
     while True:
-        macs = get_macs(ip)
+        macs = net_mapping.get_macs(ip)
         for key in active_macs.iterkeys():
             active_macs[key] += 1
         for mac in macs:
@@ -96,7 +110,7 @@ def check_dict():
 
     kill = True
     for mac in saved_macs:
-        if active_macs[mac] < 3:
+        if active_macs[mac] < 5:
             kill = False
             break
     if kill:
@@ -110,6 +124,8 @@ def main():
     if len(sys.argv) > 1:
         global MODE
         MODE = sys.argv[1]
+    if MODE == 'normal':
+        change_color(WHITE)
     t = threading.Thread(target=color_loop)
     t.start()
     threads['color'] = t
