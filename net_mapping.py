@@ -16,7 +16,7 @@ def get_network_ip(ifname):
     )[20:24])
     # return '10.0.0.196'
 
-
+    
 def get_macs(ip_address):
     nm = nmap.PortScanner()
     hosts = ip_address + '/24'
