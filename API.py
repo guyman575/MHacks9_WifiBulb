@@ -5,6 +5,7 @@ import threading
 from net_mapping import get_macs
 from net_mapping import get_network_ip
 import sys
+import app
 RED = '56ff000000f0aa'
 GREEN = '5600ff0000f0aa'
 BLUE = '560000ff00f0aa'
@@ -15,8 +16,14 @@ active_macs = {'F8:32:E4:DE:27:11': 0, '64:9A:BE:D5:5F:6D': 0}
 saved_macs = ['F8:32:E4:DE:27:11','64:9A:BE:D5:5F:6D']
 CONNECTED = True
 
+def add_mac(new_mac):
+    print("API: ", new_mac)
+    if new_mac not in active_macs:
+        active_macs[new_mac] = 0
+        saved_macs.append(new_mac)
 
-
+def get_macs():
+    return saved_macs
 
 def change_color(color):
     result = 1
