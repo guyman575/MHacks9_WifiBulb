@@ -10,7 +10,7 @@ def speed_color():
 
 	print("SPEED: ", data['download'])
 
-	colors = [0xFF0000, 0xFF3300, 0xff6600, 0xff9900, 0xFFCC00, 0xFFFF00, 0xccff00, 0x99ff00, 0x66ff00, 0x33ff00, 0x00FF00]
+	colors = ["FF0000", "FF3300", "ff6600", "ff9900", "FFCC00", "FFFF00", "ccff00", "99ff00", "66ff00", "33ff00", "00FF00"]
 
 	step = 4.5 # 50 / 11
 
@@ -19,7 +19,7 @@ def speed_color():
 	if color > 10:
 		color = 10
 
-	color = colors[color]
+	ans = colors[color]
 
-	print color
-	return color
+	print ans
+	return ans
