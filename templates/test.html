@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Starter Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<style>
+
+    .table {
+        width: 200px;
+    }
+    .navbar {
+        background-color: dodgerblue;
+    }
+
+    /* title */
+    .navbar-default .navbar-brand {
+        color: white;
+    }
+{#    .navbar-default .navbar-brand:hover,#}
+{#    .navbar-default .navbar-brand:focus {#}
+{#        color: #5E5E5E;#}
+{#    }#}
+
+    /* link */
+    .navbar-default .navbar-nav > li > a {
+        color: white;
+    }
+    .navbar-default .navbar-nav > li > a:hover,
+    .navbar-default .navbar-nav > li > a:focus {
+        color: silver;
+    }
+    .navbar-default .navbar-nav > .active > a,
+    .navbar-default .navbar-nav > .active > a:hover,
+    .navbar-default .navbar-nav > .active > a:focus {
+        color: #555;
+        background-color: #E7E7E7;
+    }
+    .navbar-default .navbar-nav > .open > a,
+    .navbar-default .navbar-nav > .open > a:hover,
+    .navbar-default .navbar-nav > .open > a:focus {
+        color: #555;
+        background-color: #D5D5D5;
+    }
+
+    body {
+      padding-top: 50px;
+    }
+    .spacer {
+      margin-top: 2%;
+      margin-bottom: 2%;
+    }
+    .block {
+      height: 440px;
+    }
+
+    .panel-clr {
+        background-color:silver;
+        height: 220px;
+        text-align: center;
+        font-size: 50px;
+    }
+
+    .panel-clr.on {
+        background-color:mediumspringgreen;
+        height: 220px;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top ">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand " href="#">Wifi Lightbulb</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="home"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+<!--The spacers -->
+<div class="container col-lg-12 spacer"></div>
+<div class="container-fluid col-md-12">
+
+
+<div class="col-md-12 bg-info " style="height: 260px"> <!--The yellow background -->
+    <br>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="panel panel-clr">
+            <div class="panel-body">Display Weather</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="panel panel-clr">
+            <div class="panel-body">Display wifi speed</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+          <div class="panel panel-clr">
+            <div class="panel-body">Display Time</div>
+        </div>
+      </div>
+    </div>
+    <br>
+</div>
+</div><!-- /.container -->
+
+    <!--The spacers -->
+    <div class="container col-lg-12 spacer"></div>
+    <div class="container-fluid col-md-12">
+
+
+    <table class="table table-striped table-bordered table-condensed">
+    {% for mac in macs%}
+        <tr>
+            <td>{{ mac }}</td>
+            <td>
+                <form action="{{ url_for('main') }}" method="post">
+                    <input type="submit" name = "Button" value = "Remove">
+                    <input type="hidden" name = "remove" value = "{{ mac }}">
+                    <input type="hidden" name = "op" value="remove_mac">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <form action="{{ url_for('main') }}" method="post">
+        New MAC Address:
+        <input type = 'text' name = 'address'>
+        <input type = 'hidden' name = 'op', value = 'new_mac'>
+        <input type = 'submit' name = "Submit">
+    </form>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script>
+
+    $( function() {
+      $(".panel-clr").click( function() {
+          $(this).toggleClass('on');
+    } )
+    });
+    </script>
+
+</body>
+</html>
