@@ -5,8 +5,6 @@ import threading
 from net_mapping import get_macs
 from net_mapping import get_network_ip
 import sys
-import app
-from weather_color import check_weather
 RED = '56ff000000f0aa'
 GREEN = '5600ff0000f0aa'
 BLUE = '560000ff00f0aa'
@@ -16,16 +14,9 @@ threads = {}
 active_macs = {'F8:32:E4:DE:27:11': 0, '64:9A:BE:D5:5F:6D': 0}
 saved_macs = ['F8:32:E4:DE:27:11','64:9A:BE:D5:5F:6D']
 CONNECTED = True
-MODE = ''
 
-def add_mac(new_mac):
-    print("API: ", new_mac)
-    if new_mac not in active_macs:
-        active_macs[new_mac] = 0
-        saved_macs.append(new_mac)
 
-def get_macs():
-    return saved_macs
+
 
 def change_color(color):
     result = 1
@@ -36,19 +27,8 @@ def change_color(color):
             result = os.system('sudo gatttool -b D2:39:79:10:18:87 --char-write-req --handle=0x0043 --value=' + OFF)
 
 
-def check_speed():
+def check():
     color = speed_color()
-    packet = '56' + color + '00f0aa'
-    change_color(packet)
-
-def check_normal():
-    if CONNECTED:
-        change_color(WHITE)
-    else:
-        change_color(OFF)
-
-def check_weather():
-    color = weather_color()
     packet = '56' + color + '00f0aa'
     change_color(packet)
 
@@ -56,13 +36,7 @@ def color_loop():
     while True:
         if CONNECTED:
             print("getting color")
-            if MODE == 'speed':
-                check_speed()
-            if MODE == 'normal':
-                check_normal()
-            if MODE == 'weather':
-                check_weather():
-
+            check()
         else:
             sleep(1)
             print("sleeping")
@@ -75,6 +49,7 @@ def loop_check():
         c = check_dict()
         if CONNECTED == True:
             if c == False:
+
                 change_color(OFF)
         global CONNECTED
         CONNECTED = c
@@ -106,19 +81,20 @@ def check_dict():
 
 
 def main():
-
+    mode = ''
     if len(sys.argv) > 1:
-        global MODE
-        MODE = sys.argv[1]
+        mode = sys.argv[1]
+
     t = threading.Thread(target=color_loop)
     t.start()
     threads['color'] = t
-    t = threading.Thread(target=loop_map)
-    t.start()
-    threads['map'] = t
-    t = threading.Thread(target=loop_check)
-    t.start()
-    threads['check'] = t
+    if mode == 'mapping':
+        t = threading.Thread(target=loop_map)
+        t.start()
+        threads['map'] = t
+        t = threading.Thread(target=loop_check)
+        t.start()
+        threads['check'] = t
 
 if __name__ == "__main__":
     main()
