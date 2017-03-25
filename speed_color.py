@@ -12,14 +12,14 @@ def speed_color():
 
 	colors = ["FF0000", "FF3300", "ff6600", "ff9900", "FFCC00", "FFFF00", "ccff00", "99ff00", "66ff00", "33ff00", "00FF00"]
 
-	step = 4.5 # 50 / 11
+	step = 4.5 * 2 # 50 / 11
 
-	color = int(data['download']) / 1000000 / 4.5
+	color = int(data['download']) / 1000000 / step
 
 	if color > 10:
 		color = 10
 
-	ans = colors[color]
+	ans = colors[int(color)]
 
 	print ans
 	return ans
