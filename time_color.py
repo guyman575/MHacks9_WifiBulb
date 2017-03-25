@@ -1,6 +1,6 @@
 import datetime
 import time
-
+from fractions import Fraction
 
 
 #TODO Return a hex value as a string for the color based on the time of day
@@ -36,7 +36,8 @@ def check_time():
     
     fluid_color = '00000000'
     noon_secs = 43200
-    joes_var = float(255/86400)
+    joes_var = Fraction(numerator = 255, denominator = 86400)
+    print joes_var
     
     
     if time_dayint >= bed_timeint and time_dayint <= wake_timeint:
@@ -50,6 +51,7 @@ def check_time():
         time_frm_noon = abs(noon_secs - secs)
         print time_frm_noon
         dec_val = 255 - time_frm_noon*(joes_var)
+        
         print dec_val
         fluid_color = rgb_to_hex(255,255, dec_val)
         print fluid_color
