@@ -30,4 +30,4 @@ def color_clock():
         else:
             blue = 255 - 4.25 * min + .07083 * sec
             red = 255
-    return '#%02x%02x%02x' % (red, green, blue)
+    return '%02x%02x%02x' % (red, green, blue)
